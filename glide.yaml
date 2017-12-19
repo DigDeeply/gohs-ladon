@@ -1,0 +1,14 @@
+package: .
+import:
+- package: github.com/flier/gohs
+  subpackages:
+  - hyperscan
+- package: github.com/spf13/cobra
+  version: ~0.0.1
+- package: github.com/spf13/viper
+  version: ~1.0.0
+- package: github.com/Sirupsen/logrus
+  version: ~1.0.4
+- package: golang.org/x/crypto
+  subpackages:
+  - ssh/terminal
