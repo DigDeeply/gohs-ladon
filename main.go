@@ -66,6 +66,8 @@ func main() {
 
 func run(cmd *cobra.Command, args []string) {
 
+	// Todo add a goroutine to check if pattern file changed, and reload file.
+
 	// start web service
 	http.Handle("/", middleware(http.HandlerFunc(matchHandle)))
 	http.Handle("/_stats", middleware(http.HandlerFunc(statsHandle)))
