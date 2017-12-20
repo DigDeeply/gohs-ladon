@@ -26,6 +26,7 @@ var (
 	Scratch  *hyperscan.Scratch
 	Db       hyperscan.BlockDatabase
 	Uptime   time.Time
+	RegexMap map[int]RegexLine
 )
 
 type Response struct {
@@ -35,19 +36,25 @@ type Response struct {
 }
 
 type MatchResp struct {
-	Id      int
-	From    int
-	To      int
-	Flags   int
-	Context string
+	Id         int       `json:id`
+	From       int       `json:from`
+	To         int       `json:to`
+	Flags      int       `json:flags`
+	Context    string    `json:context`
+	RegexLinev RegexLine `json:regexline`
+}
+
+type RegexLine struct {
+	Expr string
+	Data string
 }
 
 func main() {
 	Version = "0.0.1"
 	viper.AutomaticEnv()
 	var rootCmd = &cobra.Command{
-		Use:     "gohs",
-		Short:   fmt.Sprintf("Gohs Service %s", Version),
+		Use:     "gohs-ladon",
+		Short:   fmt.Sprintf("Gohs-ladon Service %s", Version),
 		Run:     run,
 		PreRunE: preRunE,
 	}
@@ -65,6 +72,7 @@ func main() {
 }
 
 func run(cmd *cobra.Command, args []string) {
+	fmt.Printf("%v\n", RegexMap)
 
 	// Todo add a goroutine to check if pattern file changed, and reload file.
 
@@ -102,15 +110,16 @@ func preRunE(cmd *cobra.Command, args []string) error {
 		log.SetLevel(log.WarnLevel)
 	}
 	log.Info("Prerun", args)
-	_, _ = buildScratch(FilePath)
-	return nil
+	RegexMap = make(map[int]RegexLine)
+	err := buildScratch(FilePath)
+	return err
 }
 
 // build scratch for regex file.
-func buildScratch(filepath string) (scratch *hyperscan.Scratch, err error) {
+func buildScratch(filepath string) (err error) {
 	file, err := os.Open(filepath)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer file.Close()
 
@@ -121,49 +130,54 @@ func buildScratch(filepath string) (scratch *hyperscan.Scratch, err error) {
 	//flags := hyperscan.Caseless | hyperscan.Utf8Mode
 	flags, err := hyperscan.ParseCompileFlag(Flag)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		log.Info(scanner.Text())
 		line := scanner.Text()
+		// line start with #, skip
+		if strings.HasPrefix(strings.TrimSpace(line), "#") {
+			log.Info(fmt.Sprintf("line start with #, skip line: %s", line))
+			continue
+		}
 		s := strings.Split(line, "\t")
-		//fmt.Println(s, len(s))
-		if len(s) != 2 {
+		// length less than 3, skip
+		if len(s) < 3 {
+			log.Info(fmt.Sprintf("line length less than 3, skip line: %s", line))
 			continue
 		}
 		id, err = strconv.Atoi(s[0])
 		if err != nil {
-			return nil, fmt.Errorf("Atoi error.")
+			return fmt.Errorf("Atoi error.")
 		}
 		expr = hyperscan.Expression(s[1])
+		data := s[2]
 		pattern := &hyperscan.Pattern{Expression: expr, Flags: flags, Id: id}
 		patterns = append(patterns, pattern)
+		RegexMap[id] = RegexLine{string(expr), data}
 	}
 	if len(patterns) <= 0 {
-		log.Error("empty regex")
-		os.Exit(-1)
+		return fmt.Errorf("Empty regex")
 	}
 	log.Info(fmt.Sprintf("regex file line number: %d", len(patterns)))
 	db, err := hyperscan.NewBlockDatabase(patterns...)
 	Db = db
 
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
+		return err
 	}
-	scratch, err = hyperscan.NewScratch(Db)
+	scratch, err := hyperscan.NewScratch(Db)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
+		return err
 	}
 	Scratch = scratch
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		return err
 	}
-	return
+	return nil
 }
 
 func middleware(next http.Handler) http.Handler {
@@ -194,7 +208,11 @@ func matchHandle(w http.ResponseWriter, r *http.Request) {
 		var matchResps []MatchResp
 		eventHandler := func(id uint, from, to uint64, flags uint, context interface{}) error {
 			log.Info(fmt.Sprintf("id: %d, from: %d, to: %d, flags: %v, context: %s", id, from, to, flags, context))
-			matchResp := MatchResp{Id: int(id), From: int(from), To: int(to), Flags: int(flags), Context: fmt.Sprintf("%s", context)}
+			regexLine, ok := RegexMap[int(id)]
+			if !ok {
+				regexLine = RegexLine{}
+			}
+			matchResp := MatchResp{Id: int(id), From: int(from), To: int(to), Flags: int(flags), Context: fmt.Sprintf("%s", context), RegexLinev: regexLine}
 			matchResps = append(matchResps, matchResp)
 			return nil
 		}

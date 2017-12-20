@@ -1,3 +1,5 @@
-1	.*ello
-3	hello$
-4	wello
+1	[what is|what's| ]*your name\??$	{"type":"name", "user":"you"}
+2	[what is|what's| ]*my name\??$	{"type":"name", "user":"me"}
+14	[what is|what's|how is| ]*the weather[today| ]*\?*$	{"type":"weather", "date":"today"}
+15	[what is|what's|how is| ]*the weather[ ]*[tomorrow]+\?*$	{"type":"weather", "date":"tomorrow"}
+#hello
