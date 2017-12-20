@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/DigDeeply/gohs-ladon.svg?branch=master)](https://travis-ci.org/DigDeeply/gohs-ladon)    
 基于Intel开源的hyperscan实现的GO版本的一个服务，取名拉冬，希腊神话中表示百头巨龙。给定一行文本，能够从海量的正则表达式中快速查询出命中了哪些正则，还可以返回该正则附加的一些数据。
 
+## 使用示例
 例如，给出一个正则文本:
 第一列是唯一id, 第二列是正则表达式, 第三列是附加数据
 ```
@@ -9,12 +10,12 @@
 2	^[唱|一首|来]*歌[曲|吧|啊]*$	{"type":"song", "name":"random"}
 3	^[唱|一首|来]*东风破[的|歌|歌曲|吧|啊]*$	{"type":"song", "name":"东风破"}
 ```
-启动服务
+### 启动服务
 ```sh
 ./gohs-ladon --filepath=patterns/pattern2.txt
 [2017-12-20T06:50:50Z] Hs-service 0.0.1 Running on 0.0.0.0:8080
 ```
-通过服务查询
+### 通过服务查询
 ```
 curl "http://127.0.0.1:8080/?q=你叫什么名字"
 
@@ -37,3 +38,23 @@ curl "http://127.0.0.1:8080/?q=你叫什么名字"
     ]
 }
 ```
+## Bench
+比如pttern3.txt中是随机生成了50000个邮箱地址，作为正则表达式,邮箱中的点就表示任意一个字符，所以也算是比较简单的正则了。
+```
+49991   hwkida@nyveoiwv.net teststring
+49992   hjrsiphq@uihseu.net teststring
+49993   jeybcfgme@vjomrn.com    teststring
+49994   nnthiprbwf@ebpflgne.net teststring
+49995   zgsisvddx@mayvf.com teststring
+49996   krfwdfwcq@uczmm.net teststring
+49997   lzfsw@coikdq.net    teststring
+49998   wgaoakpixs@pptizfkr.org teststring
+49999   gfthpo@qpxknsku.net teststring
+50000   jsxdxlq@cliijbqaqx.org  teststring
+```
+比如这条结果，就是一个正则匹配的结果.
+![](http://ww1.sinaimg.cn/large/6973add9gy1fmndxla4rnj20gf0eijsy.jpg)
+
+以10并发压10w次，得到的结果如下
+![](http://ww1.sinaimg.cn/large/6973add9gy1fmndzl2iwbj20mk0ku416.jpg)
+可以看到，平均响应时间只有1ms，这还基本都是网络开销，正则查找本身其实只有几十µs。
