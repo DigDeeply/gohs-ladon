@@ -53,7 +53,7 @@ curl "http://127.0.0.1:8080/?q=你叫什么名字"
 50000   jsxdxlq@cliijbqaqx.org  teststring
 ```
 比如这条结果，就是一个正则匹配的结果.
-![](https://ww1.sinaimg.cn/large/6973add9gy1fmndxla4rnj20gf0eijsy.jpg)
+![](https://ws1.sinaimg.cn/mw690/6973add9gy1fmnedo4l2bj20gf0eijsy.jpg)
 
 以10并发压10w次，得到的结果如下
 ![](https://ww1.sinaimg.cn/large/6973add9gy1fmndzl2iwbj20mk0ku416.jpg)
