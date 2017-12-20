@@ -58,7 +58,7 @@ func main() {
 		Run:     run,
 		PreRunE: preRunE,
 	}
-	rootCmd.Flags().Bool("debug", true, "Enable debug mode")
+	rootCmd.Flags().Bool("debug", false, "Enable debug mode")
 	rootCmd.Flags().Int("port", 8080, "Listen port")
 	rootCmd.Flags().String("filepath", "", "Dict file path")
 	rootCmd.Flags().String("flag", "iou", "Regex Flag")
@@ -72,8 +72,6 @@ func main() {
 }
 
 func run(cmd *cobra.Command, args []string) {
-	fmt.Printf("%v\n", RegexMap)
-
 	// Todo add a goroutine to check if pattern file changed, and reload file.
 
 	// start web service
@@ -88,7 +86,7 @@ func run(cmd *cobra.Command, args []string) {
 	}
 	Uptime = time.Now()
 
-	fmt.Printf("[%s] Hs-service %s Running on %s\n", Uptime.Format(time.RFC3339), Version, addr)
+	fmt.Printf("[%s] gohs-ladon %s Running on %s\n", Uptime.Format(time.RFC3339), Version, addr)
 	if err := s.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
@@ -107,9 +105,9 @@ func preRunE(cmd *cobra.Command, args []string) error {
 	if Debug {
 		log.SetLevel(log.DebugLevel)
 	} else {
-		log.SetLevel(log.WarnLevel)
+		log.SetLevel(log.InfoLevel)
 	}
-	log.Info("Prerun", args)
+	log.Debug("Prerun", args)
 	RegexMap = make(map[int]RegexLine)
 	err := buildScratch(FilePath)
 	return err
@@ -135,7 +133,7 @@ func buildScratch(filepath string) (err error) {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		log.Info(scanner.Text())
+		log.Debug(scanner.Text())
 		line := scanner.Text()
 		// line start with #, skip
 		if strings.HasPrefix(strings.TrimSpace(line), "#") {
@@ -162,6 +160,7 @@ func buildScratch(filepath string) (err error) {
 		return fmt.Errorf("Empty regex")
 	}
 	log.Info(fmt.Sprintf("regex file line number: %d", len(patterns)))
+	log.Info("Start Building, please wait...")
 	db, err := hyperscan.NewBlockDatabase(patterns...)
 	Db = db
 
@@ -236,6 +235,6 @@ func matchHandle(w http.ResponseWriter, r *http.Request) {
 
 func statsHandle(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	io.WriteString(w, fmt.Sprintf("Hs-service %v, Uptime %v",
+	io.WriteString(w, fmt.Sprintf("gohs-ladon %v, Uptime %v",
 		Version, Uptime.Format(time.RFC3339)))
 }

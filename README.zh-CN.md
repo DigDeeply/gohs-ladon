@@ -73,7 +73,7 @@ Usage:
 gohs-ladon [flags]
 
 Flags:
---debug             Enable debug mode (default true)
+    --debug             Enable debug mode (default false)
     --filepath string   Dict file path
     --flag string       Regex Flag (default "iou")
 -h, --help              help for gohs-ladon
