@@ -59,3 +59,23 @@ curl "http://127.0.0.1:8080/?q=你叫什么名字"
 ![](https://ws1.sinaimg.cn/mw690/6973add9gy1fmnf04tzjfj20mk0ku416.jpg)
 
 可以看到，平均响应时间只有1ms，这还基本都是网络开销，正则查找本身其实只有几十µs。
+
+## 使用
+该库使用需要安装hyperscan的类库，安装步骤比较繁琐，可以参考我hyperscan的一个Docker镜像的DockerfileJ进行安装。
+如果有Docker环境的话，git clone代码后，可以在代码根目录下直接执行`make build`，就会将编译完的二进制放在代码根目录下了。
+
+使用./gohs-ladon -h可以查看帮助文档.
+```
+$ ./gohs-ladon -h
+Gohs-ladon Service 0.0.1
+
+Usage:
+gohs-ladon [flags]
+
+Flags:
+--debug             Enable debug mode (default true)
+    --filepath string   Dict file path
+    --flag string       Regex Flag (default "iou")
+-h, --help              help for gohs-ladon
+    --port int          Listen port (default 8080)
+```

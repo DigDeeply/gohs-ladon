@@ -6,5 +6,9 @@ dockerfile:
 
 dev:
 	docker run --rm -p 19775:8080 -v $(PWD):/go/src/gohs-ladon -ti digdeeply/gohs-service:latest /bin/bash
+
+build:
+	docker run --rm -v $(PWD):/go/src/gohs-ladon -ti digdeeply/gohs-service:latest sh -c "cd /go/src/gohs-ladon && go build"
+
 test:
-	docker run --rm -p 19775:8080 -v $(PWD):/go/src/gohs-ladon -ti digdeeply/gohs-service:latest sh -c "cd /go/src/gohs-ladon && go test"
+	docker run --rm -v $(PWD):/go/src/gohs-ladon -ti digdeeply/gohs-service:latest sh -c "cd /go/src/gohs-ladon && go test"
