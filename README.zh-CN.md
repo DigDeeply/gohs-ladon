@@ -53,8 +53,8 @@ curl "http://127.0.0.1:8080/?q=你叫什么名字"
 50000   jsxdxlq@cliijbqaqx.org  teststring
 ```
 比如这条结果，就是一个正则匹配的结果.
-![](http://ww1.sinaimg.cn/large/6973add9gy1fmndxla4rnj20gf0eijsy.jpg)
+![](https://ww1.sinaimg.cn/large/6973add9gy1fmndxla4rnj20gf0eijsy.jpg)
 
 以10并发压10w次，得到的结果如下
-![](http://ww1.sinaimg.cn/large/6973add9gy1fmndzl2iwbj20mk0ku416.jpg)
+![](https://ww1.sinaimg.cn/large/6973add9gy1fmndzl2iwbj20mk0ku416.jpg)
 可以看到，平均响应时间只有1ms，这还基本都是网络开销，正则查找本身其实只有几十µs。
