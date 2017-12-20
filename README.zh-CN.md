@@ -1,23 +1,24 @@
 # gohs-Ladon
-»ùÓÚIntel¿ªÔ´µÄhyperscanÊµÏÖµÄGO°æ±¾µÄÒ»¸ö·þÎñ£¬È¡ÃûÀ­¶¬£¬Ï£À°Éñ»°ÖÐ±íÊ¾°ÙÍ·¾ÞÁú¡£¸ø¶¨Ò»ÐÐÎÄ±¾£¬ÄÜ¹»´Óº£Á¿µÄÕýÔò±í´ïÊ½ÖÐ¿ìËÙ²éÑ¯³öÃüÖÐÁËÄÄÐ©ÕýÔò£¬»¹¿ÉÒÔ·µ»Ø¸ÃÕýÔò¸½¼ÓµÄÒ»Ð©Êý¾Ý¡£
+[![Build Status](https://travis-ci.org/DigDeeply/gohs-ladon.svg?branch=master)](https://travis-ci.org/DigDeeply/gohs-ladon)    
+åŸºäºŽIntelå¼€æºçš„hyperscanå®žçŽ°çš„GOç‰ˆæœ¬çš„ä¸€ä¸ªæœåŠ¡ï¼Œå–åæ‹‰å†¬ï¼Œå¸Œè…Šç¥žè¯ä¸­è¡¨ç¤ºç™¾å¤´å·¨é¾™ã€‚ç»™å®šä¸€è¡Œæ–‡æœ¬ï¼Œèƒ½å¤Ÿä»Žæµ·é‡çš„æ­£åˆ™è¡¨è¾¾å¼ä¸­å¿«é€ŸæŸ¥è¯¢å‡ºå‘½ä¸­äº†å“ªäº›æ­£åˆ™ï¼Œè¿˜å¯ä»¥è¿”å›žè¯¥æ­£åˆ™é™„åŠ çš„ä¸€äº›æ•°æ®ã€‚
 
-ÀýÈç£¬¸ø³öÒ»¸öÕýÔòÎÄ±¾:
-µÚÒ»ÁÐÊÇÎ¨Ò»id, µÚ¶þÁÐÊÇÕýÔò±í´ïÊ½, µÚÈýÁÐÊÇ¸½¼ÓÊý¾Ý
+ä¾‹å¦‚ï¼Œç»™å‡ºä¸€ä¸ªæ­£åˆ™æ–‡æœ¬:
+ç¬¬ä¸€åˆ—æ˜¯å”¯ä¸€id, ç¬¬äºŒåˆ—æ˜¯æ­£åˆ™è¡¨è¾¾å¼, ç¬¬ä¸‰åˆ—æ˜¯é™„åŠ æ•°æ®
 ```
-1	^[Äã|½Ð|Ê²Ã´|µÄ|ÊÇ]*Ãû×Ö[Äã|½Ð|Ê²Ã´|µÄ|ÊÇ]*$	{"type:"name", "user":"you"}
-2	^[³ª|Ò»Ê×|À´]*¸è[Çú|°É|°¡]*$	{"type":"song", "name":"random"}
-3	^[³ª|Ò»Ê×|À´]*¶«·çÆÆ[µÄ|¸è|¸èÇú|°É|°¡]*$	{"type":"song", "name":"¶«·çÆÆ"}
+1	^[ä½ |å«|ä»€ä¹ˆ|çš„|æ˜¯]*åå­—[ä½ |å«|ä»€ä¹ˆ|çš„|æ˜¯]*$	{"type:"name", "user":"you"}
+2	^[å”±|ä¸€é¦–|æ¥]*æ­Œ[æ›²|å§|å•Š]*$	{"type":"song", "name":"random"}
+3	^[å”±|ä¸€é¦–|æ¥]*ä¸œé£Žç ´[çš„|æ­Œ|æ­Œæ›²|å§|å•Š]*$	{"type":"song", "name":"ä¸œé£Žç ´"}
 ```
-Æô¶¯·þÎñ
+å¯åŠ¨æœåŠ¡
 ```sh
 ./gohs-ladon --filepath=patterns/pattern2.txt
 [2017-12-20T06:50:50Z] Hs-service 0.0.1 Running on 0.0.0.0:8080
 ```
-Í¨¹ý·þÎñ²éÑ¯
+é€šè¿‡æœåŠ¡æŸ¥è¯¢
 ```
-curl "http://127.0.0.1:8080/?q=Äã½ÐÊ²Ã´Ãû×Ö"
+curl "http://127.0.0.1:8080/?q=ä½ å«ä»€ä¹ˆåå­—"
 
-·µ»Øjson,±íÃ÷ÃüÖÐÁËµÚÒ»ÌõÕýÔò£¬²¢·µ»ØÁËÕýÔòÎÄ¼þÖÐµÄ¸½¼ÓÊý¾Ý
+è¿”å›žjson,è¡¨æ˜Žå‘½ä¸­äº†ç¬¬ä¸€æ¡æ­£åˆ™ï¼Œå¹¶è¿”å›žäº†æ­£åˆ™æ–‡ä»¶ä¸­çš„é™„åŠ æ•°æ®
 {
     "Errno": 0,
         "Msg": "",
@@ -27,9 +28,9 @@ curl "http://127.0.0.1:8080/?q=Äã½ÐÊ²Ã´Ãû×Ö"
             "From": 0,
             "To": 18,
             "Flags": 0,
-            "Context": "Äã½ÐÊ²Ã´Ãû×Ö",
+            "Context": "ä½ å«ä»€ä¹ˆåå­—",
             "RegexLinev": {
-                "Expr": "^[Äã|½Ð|Ê²Ã´|µÄ|ÊÇ]*Ãû×Ö[Äã|½Ð|Ê²Ã´|µÄ|ÊÇ]*$",
+                "Expr": "^[ä½ |å«|ä»€ä¹ˆ|çš„|æ˜¯]*åå­—[ä½ |å«|ä»€ä¹ˆ|çš„|æ˜¯]*$",
                 "Data": "{\"type:\"name\", \"user\":\"you\"}"
             }
         }
