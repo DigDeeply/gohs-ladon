@@ -1,6 +1,11 @@
 # gohs-Ladon
 [![Build Status](https://travis-ci.org/DigDeeply/gohs-ladon.svg?branch=master)](https://travis-ci.org/DigDeeply/gohs-ladon)    
-基于Intel开源的hyperscan实现的GO版本的一个服务，取名拉冬，希腊神话中表示百头巨龙。给定一行文本，能够从海量的正则表达式中快速查询出命中了哪些正则，还可以返回该正则附加的一些数据。
+基于Intel开源的hyperscan实现的GO版本的一个服务， 取名ladon(拉冬)，希腊神话中表示百头巨龙。给定一行文本，能够从海量的正则表达式中快速查询出命中了哪些正则，还可以返回该正则附加的一些数据。下方有简单的性能压测，5W个正则，匹配上只需要1ms.    
+使用这个服务,如果你能维护足够完善的正则数据，就能实现一个 伪智能AI，可以理解你的各种语义,然后去做对应的处理。当然，具体能玩成什么样子，就看大家发挥了.    
+
+## Links
+
+- [English Introduction](README.en.md)
 
 ## 使用示例
 例如，给出一个正则文本:
@@ -79,3 +84,7 @@ Flags:
 -h, --help              help for gohs-ladon
     --port int          Listen port (default 8080)
 ```
+
+## TODO
+- 增加动态加载字典逻辑。自动检测，当字典文件发生变化时，进行自动build.
+- 完善英文Readme
