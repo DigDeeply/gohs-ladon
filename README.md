@@ -43,7 +43,7 @@ curl "http://127.0.0.1:8080/?q=你叫什么名字"
     ]
 }
 ```
-## Bench
+## Benchmark
 比如pttern3.txt中是随机生成了50000个邮箱地址，作为正则表达式,邮箱中的点就表示任意一个字符，所以也算是比较简单的正则了。
 ```
 49991   hwkida@nyveoiwv.net teststring
