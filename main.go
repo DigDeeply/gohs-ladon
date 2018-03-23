@@ -14,8 +14,15 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
+
+// with sync for resource lock
+type scratch struct {
+	sync.RWMutex
+	s *hyperscan.Scratch
+}
 
 var (
 	Version  string
@@ -23,7 +30,7 @@ var (
 	Port     int
 	FilePath string
 	Flag     string
-	Scratch  *hyperscan.Scratch
+	Scratch  scratch
 	Db       hyperscan.BlockDatabase
 	Uptime   time.Time
 	RegexMap map[int]RegexLine
@@ -171,7 +178,7 @@ func buildScratch(filepath string) (err error) {
 	if err != nil {
 		return err
 	}
-	Scratch = scratch
+	Scratch.s = scratch
 
 	if err := scanner.Err(); err != nil {
 		return err
@@ -216,7 +223,9 @@ func matchHandle(w http.ResponseWriter, r *http.Request) {
 			return nil
 		}
 
-		if err := Db.Scan(inputData, Scratch, eventHandler, inputData); err != nil {
+		// lock scratch
+		Scratch.Lock()
+		if err := Db.Scan(inputData, Scratch.s, eventHandler, inputData); err != nil {
 			logFields := log.Fields{"query": query}
 			log.WithFields(logFields).Error(err)
 			resp.Errno = -2
@@ -228,6 +237,8 @@ func matchHandle(w http.ResponseWriter, r *http.Request) {
 			}
 			resp.Data = matchResps
 		}
+		// unlock scratch
+		Scratch.Unlock()
 	}
 	json.NewEncoder(w).Encode(resp)
 	w.WriteHeader(http.StatusOK)

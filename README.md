@@ -61,7 +61,7 @@ curl "http://127.0.0.1:8080/?q=你叫什么名字"
 ![](https://ws1.sinaimg.cn/mw690/6973add9gy1fmnedo4l2bj20gf0eijsy.jpg)
 
 以10并发压10w次，得到的结果如下:
-![](https://ws1.sinaimg.cn/mw690/6973add9gy1fmnf04tzjfj20mk0ku416.jpg)
+![](https://ws1.sinaimg.cn/large/6973add9gy1fpmqzd4k5zj219414athb.jpg)
 
 可以看到，平均响应时间只有1ms，这还基本都是网络开销，正则查找本身其实只有几十µs。
 
